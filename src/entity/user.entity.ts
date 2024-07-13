@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 
 @Entity()
-@Unique(["email"])
+@Unique(["code","device_uid"])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -43,7 +43,6 @@ export class User {
 
   @Column({
     type: "varchar",
-    unique: true,
     nullable: true,
   })
   device_uid: string;
