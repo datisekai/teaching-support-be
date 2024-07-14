@@ -3,7 +3,31 @@ import { checkJwt } from "../middlewares/checkJwt";
 import AuthController from "../controllers/AuthController";
 
 const router = Router();
-//Login route
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Auth:
+ *       example:
+ *         code: 3120410115
+ *         password: 123456
+ * tags:
+ *   name: Login
+ *   description: Login
+ * /api.auth/login:
+ *   post:
+ *     summary: Login
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *              $ref: '#/components/schemas/Auth'
+ *     responses:
+ *       200:
+ *         description: Login successfully
+ */
 router.post("/login", AuthController.login);
 
 //Change my password

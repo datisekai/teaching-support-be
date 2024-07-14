@@ -7,11 +7,38 @@ import { UserRole } from "../dto/UserDto";
 const router = Router();
 
 //Get all users
+
 router.get(
   "/",
   [checkJwt, checkRole([UserRole.ADMIN])],
   UserController.listAll
 );
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ * tags:
+ *   name: Get My Info
+ *   description: Get My Info
+ * /api.user/me:
+ *   get:
+ *     summary: Get My Info
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Get My Info successfully
+ */
+router.get(
+  "/me",
+  [checkJwt],
+  UserController.getMyInfo
+);
+
 
 // Get one user
 router.get(

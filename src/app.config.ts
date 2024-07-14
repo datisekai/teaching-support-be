@@ -9,6 +9,7 @@ import departmentRoute from "./routes/department";
 import courseRoute from "./routes/course";
 import groupRoute from "./routes/group";
 import eventRoomRoute from "./routes/event-room";
+import swaggerDocs from './swagger'
 
 const express = require("express");
 const path = require("path");
@@ -69,6 +70,9 @@ export default config({
     app.use("/api.event-room", eventRoomRoute);
     app.use("/api.course", courseRoute);
     app.use("/api.group", groupRoute);
+
+
+    swaggerDocs(app);
 
     /// Last Route
     app.use(express.static(getPublicDir()));

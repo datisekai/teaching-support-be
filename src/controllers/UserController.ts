@@ -218,6 +218,40 @@ class UserController {
 
     res.status(200).send({ success: true, message: "User reset" });
   };
+
+  static getMyInfo = async (req: Request, res: Response) => {
+
+    const userId = res.locals.jwtPayload.id;
+    //Get the user from database
+    const userRepository = myDataSource.getRepository(User);
+    try {
+      const user = await userRepository.findOneOrFail({
+        where: {
+          id: userId,
+          is_deleted: false,
+        },
+        select: [
+          "id",
+          "code",
+          "email",
+          "phone",
+          "active",
+          "role",
+          "name",
+          "avatar",
+          "device_uid",
+        ], //We dont want to send the password on response
+      });
+      res.send({
+        success: true,
+        data: {
+          user,
+        },
+      });
+    } catch (error) {
+      res.status(404).send({ message: "User not found", success: false });
+    }
+  };
 }
 
 export default UserController;

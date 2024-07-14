@@ -5,6 +5,7 @@ import { myDataSource } from "../app-data-source";
 import config from "../config/config";
 import { User } from "../entity/user.entity";
 import { passwordCompare } from "../utils";
+import { UserRole } from "../dto/UserDto";
 
 class AuthController {
   static login = async (req: Request, res: Response) => {
@@ -59,6 +60,8 @@ class AuthController {
       },
     });
   };
+
+  
 
   // static changePassword = async (req: Request, res: Response) => {
   //   //Get ID from JWT
