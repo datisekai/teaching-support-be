@@ -21,6 +21,7 @@ let gameServer: Server;
  */
 import { myDataSource } from "./app-data-source";
 import { MyRoom } from "./rooms/MyRoom";
+import { ColyseusService } from "./services/ColyseusService";
 
 export default config({
   initializeGameServer: (_gameServer) => {
@@ -72,6 +73,10 @@ export default config({
     app.use("/api.course", courseRoute);
     app.use("/api.group", groupRoute);
     app.use("/api.room", roomRoute);
+
+    setTimeout(() => {
+      ColyseusService.initRoomAfterRestart();
+    }, 2000);
 
     swaggerDocs(app);
 

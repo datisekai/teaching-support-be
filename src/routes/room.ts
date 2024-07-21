@@ -1,11 +1,18 @@
 import { Router } from "express";
 import { checkJwt } from "../middlewares/checkJwt";
 import RoomController from "../controllers/RoomController";
+import { checkRole } from "../middlewares/checkRole";
 
 const router = Router();
 
 //Get all
 router.get("/", [checkJwt], RoomController.listAll);
+
+router.get(
+  "/my-rooms",
+  [checkJwt, checkRole(["admin"])],
+  RoomController.listAllMyRooms
+);
 
 // Get one
 router.get("/:id([0-9]+)", RoomController.getOneById);

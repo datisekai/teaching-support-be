@@ -116,10 +116,9 @@ export class MyRoom extends Room<State> {
   public updateRoomStatus(message: { status: RoomStatus }): void {
     const { status } = message;
 
+    this.stopJwtInterval();
     if (status === RoomStatus.SCAN) {
       this.startJwtInterval();
-    } else {
-      this.stopJwtInterval();
     }
 
     this.state.data.status = status;
@@ -139,6 +138,7 @@ export class MyRoom extends Room<State> {
   }
 
   public stopJwtInterval(): void {
+    console.log(this.jwtInterval);
     if (this.jwtInterval) {
       clearInterval(this.jwtInterval);
       this.jwtInterval = null;
@@ -185,7 +185,7 @@ export class MyRoom extends Room<State> {
     const { qr_key, code, name, user_id, role, secret_key } = options;
 
     if (!qr_key || !code || !name || !user_id) {
-      throw new Error("qr_key, code, name is required");
+      throw new Error("qr_key, code, name, user_id is required");
     }
 
     if (

@@ -30,6 +30,8 @@ const router = Router();
  */
 router.post("/login", AuthController.login);
 
+router.post("/check-token", checkJwt, AuthController.checkToken);
+
 //Change my password
 // router.post("/change-password", [checkJwt], AuthController.changePassword);
 

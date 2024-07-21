@@ -23,7 +23,16 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({
         where: { code, is_deleted: false },
-        select: ["id", "active", "code", "email", "password", "salt"],
+        select: [
+          "id",
+          "active",
+          "code",
+          "email",
+          "password",
+          "salt",
+          "role",
+          "name",
+        ],
       });
     } catch (error) {
       res
@@ -52,16 +61,20 @@ class AuthController {
       { expiresIn: "7d" }
     );
 
+    delete user["password"];
+    delete user["salt"];
     //Send the jwt in the response
     res.send({
       success: true,
       data: {
         token,
+        user,
       },
     });
   };
-
-  
+  static checkToken = async (req: Request, res: Response) => {
+    return res.send({ success: true });
+  };
 
   // static changePassword = async (req: Request, res: Response) => {
   //   //Get ID from JWT

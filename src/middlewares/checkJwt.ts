@@ -53,5 +53,5 @@ export const checkJwt = async (
     return next();
   }
 
-  return res.status(401).send({ message: "Unauthorized", success: false });
+  res.status(401).send({ message: "Unauthorized", success: false });
 };

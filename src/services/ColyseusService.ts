@@ -1,5 +1,6 @@
 import { Room, matchMaker } from "colyseus";
 import { RoomStatus } from "../dto/RoomDto";
+import { RoomService } from "./RoomService";
 export class ColyseusService {
   static createRoom = async (data: any) => {
     try {
@@ -33,16 +34,17 @@ export class ColyseusService {
     }
     return false;
   };
-  //   static initRoomAfterRestart = async () => {
-  //     const activeRooms = await RoomService.getAll();
-  //     for (const room of activeRooms) {
-  //       await this.createRoom(room);
-  //     }
-  //   };
+  static initRoomAfterRestart = async () => {
+    const activeRooms = await RoomService.getAll();
+    for (const room of activeRooms) {
+      await this.createRoom(room);
+    }
+  };
   static findRoomId = async (data: any) => {
     console.log("findRoomId", data);
     try {
       const rooms = await matchMaker.query({ name: "my_room" });
+      console.log(rooms);
       let room = null;
       rooms.forEach((item) => {
         if (item.metadata.id == data.id) {

@@ -19,7 +19,7 @@ export class Room {
   @Column("varchar")
   title: string;
 
-  @Column("varchar")
+  @Column("text")
   description: string;
 
   @Column("varchar")
@@ -47,9 +47,6 @@ export class Room {
     enum: ["ready", "scan", "stop", "finish"],
   })
   status: string;
-
-  @Column("bigint")
-  duration: number; // milisecond
 
   @CreateDateColumn()
   created_at: Date;

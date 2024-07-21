@@ -6,6 +6,7 @@ import { Group } from "../entity/group.entity";
 import { Room } from "../entity/room.entity";
 import { ColyseusService } from "../services/ColyseusService";
 import { RoomService } from "../services/RoomService";
+import { randomString } from "../utils";
 
 class RoomController {
   static listAll = async (req: Request, res: Response) => {
@@ -21,6 +22,20 @@ class RoomController {
       message: "success",
       data: rooms,
     });
+  };
+
+  static listAllMyRooms = async (req: Request, res: Response) => {
+    const userId = res.locals.jwtPayload.id;
+    const roomRepository = myDataSource.getRepository(Room);
+    const rooms = await roomRepository.find({
+      where: {
+        is_deleted: false,
+        owner_id: userId,
+      },
+      relations: ["owner", "group"],
+    });
+
+    res.send({ message: "success", data: rooms });
   };
 
   static listAllByGroupId = async (req: Request, res: Response) => {
@@ -77,7 +92,7 @@ class RoomController {
     room.title = title;
     room.description = description;
     room.status = status || RoomStatus.READY;
-    room.duration = duration;
+    room.secret_key = randomString(10);
 
     if (active != null) {
       room.active = Boolean(active);

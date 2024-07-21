@@ -33,10 +33,6 @@ export class RoomDto {
   )
   status: RoomStatus;
 
-  @IsNotEmpty()
-  @IsNumber()
-  duration: number;
-
   @IsOptional()
   @IsString()
   secret_key: string;
