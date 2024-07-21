@@ -1,8 +1,5 @@
 import { DataSource } from "typeorm";
 
-// console.log("process.env", process.env);
-// console.log("__dirname", __dirname);
-
 export const myDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",

@@ -33,12 +33,7 @@ router.get(
  *       200:
  *         description: Get My Info successfully
  */
-router.get(
-  "/me",
-  [checkJwt],
-  UserController.getMyInfo
-);
-
+router.get("/me", [checkJwt], UserController.getMyInfo);
 
 // Get one user
 router.get(

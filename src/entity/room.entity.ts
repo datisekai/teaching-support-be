@@ -9,6 +9,7 @@ import {
   PrimaryColumn,
 } from "typeorm";
 import { User } from "./user.entity";
+import { Group } from "./group.entity";
 
 @Entity()
 export class Room {
@@ -21,12 +22,22 @@ export class Room {
   @Column("varchar")
   description: string;
 
+  @Column("varchar")
+  secret_key: string;
+
   @Column("int")
   owner_id: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "owner_id" })
   owner: User;
+
+  @Column("int")
+  group_id: number;
+
+  @ManyToOne(() => Group)
+  @JoinColumn({ name: "group_id" })
+  group: Group;
 
   @Column({ default: true, type: "boolean" })
   active: boolean;
