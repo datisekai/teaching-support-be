@@ -129,6 +129,8 @@ export class MyRoom extends Room<State> {
       const payload = {
         roomId: this.state.data.id,
         time: Date.now(),
+        room_socket_id: this.roomId,
+        room_socket_name: this.roomName,
       };
       const token = jwt.sign(payload, config.jwtSecret, {
         expiresIn: 5,
@@ -138,7 +140,6 @@ export class MyRoom extends Room<State> {
   }
 
   public stopJwtInterval(): void {
-    console.log(this.jwtInterval);
     if (this.jwtInterval) {
       clearInterval(this.jwtInterval);
       this.jwtInterval = null;
