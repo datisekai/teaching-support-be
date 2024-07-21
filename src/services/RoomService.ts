@@ -17,6 +17,23 @@ export class RoomService {
       },
     });
   };
+  static editStatus = async (id: number, status: string) => {
+    const roomRepository = myDataSource.getRepository(Room);
+    let room: Room;
+    try {
+      room = await this.getOne({
+        where: {
+          id,
+          is_deleted: false,
+        },
+      });
+    } catch (error) {
+      return false;
+    }
+    room.status = status;
+    await roomRepository.save(room);
+    return true;
+  };
   static deactivate = async (id: number) => {
     const roomRepository = myDataSource.getRepository(Room);
     let room: Room;

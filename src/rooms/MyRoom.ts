@@ -5,6 +5,7 @@ import config from "../config/config";
 import { EventRoomService } from "../services/EventRoomService";
 import { RoomStatus } from "../dto/RoomDto";
 import * as jwt from "jsonwebtoken";
+import { RoomService } from "../services/RoomService";
 
 const context = new Context();
 
@@ -121,6 +122,7 @@ export class MyRoom extends Room<State> {
       this.startJwtInterval();
     }
 
+    RoomService.editStatus(this.state.data.id, status);
     this.state.data.status = status;
   }
 
