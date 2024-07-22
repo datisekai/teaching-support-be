@@ -2,6 +2,7 @@ import { FindOneOptions } from "typeorm";
 import { myDataSource } from "../app-data-source";
 import { Room } from "../entity/room.entity";
 import { ColyseusService } from "./ColyseusService";
+import { RoomStatus } from "../dto/RoomDto";
 
 export class RoomService {
   static getOne = async (query: FindOneOptions<Room>) => {
@@ -34,6 +35,17 @@ export class RoomService {
     await roomRepository.save(room);
     return true;
   };
+  static resetStatus = async (id: number[]) => {
+    const roomRepository = myDataSource.getRepository(Room);
+    let room: Room;
+    try {
+      await roomRepository.update(id, { status: RoomStatus.READY });
+    } catch (error) {
+      return false;
+    }
+    return true;
+  };
+
   static deactivate = async (id: number) => {
     const roomRepository = myDataSource.getRepository(Room);
     let room: Room;

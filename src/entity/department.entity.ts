@@ -14,7 +14,7 @@ export class Department {
   @Column("varchar")
   name: string;
 
-  @Column("varchar")
+  @Column("text")
   description: string;
 
   @CreateDateColumn()

@@ -36,6 +36,14 @@ export class ColyseusService {
   };
   static initRoomAfterRestart = async () => {
     const activeRooms = await RoomService.getAll();
+    const scanRoomIds = [];
+    activeRooms.forEach((item) => {
+      if (item.status == RoomStatus.SCAN) {
+        scanRoomIds.push(item.id);
+        item.status = RoomStatus.READY;
+      }
+    });
+    await RoomService.resetStatus(scanRoomIds);
     for (const room of activeRooms) {
       await this.createRoom(room);
     }

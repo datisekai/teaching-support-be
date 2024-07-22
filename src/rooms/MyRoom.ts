@@ -1,4 +1,10 @@
-import { Context, defineTypes, MapSchema, Schema } from "@colyseus/schema";
+import {
+  Context,
+  defineTypes,
+  MapSchema,
+  Schema,
+  ArraySchema,
+} from "@colyseus/schema";
 import { Client, Room } from "colyseus";
 import { verify } from "jsonwebtoken";
 import config from "../config/config";
@@ -14,12 +20,19 @@ enum PlayerRole {
   TEACHER = "teacher",
 }
 
+class EnrollStudent extends Schema {
+  public code: string;
+  public name: string;
+  public userId: number;
+  public role: string;
+}
+
 class Player extends Schema {
   // tslint:disable-line
   public connected: boolean;
-  public code: string;
+  // public code: string;
   public sessionId: string;
-  public name: string;
+  // public name: string;
   public userId: number;
   public role: string;
 }
@@ -61,12 +74,14 @@ defineTypes(
 class State extends Schema {
   public players = new MapSchema<Player>();
   public data: RoomData;
+  public enrollStudents = new ArraySchema<EnrollStudent>();
 }
 defineTypes(
   State,
   {
     players: { map: Player },
     data: RoomData,
+    enrollStudents: [EnrollStudent],
   },
   { context }
 );
@@ -230,16 +245,30 @@ export class MyRoom extends Room<State> {
 
   public onJoin(client: Client, options: any = {}) {
     const player = this.createPlayer(client, options);
+    this.addEnrollStudent(options);
 
     this.state.players.set(client.sessionId, player);
+  }
+
+  private addEnrollStudent(options: any = {}) {
+    const { name, code, user_id, role } = options;
+    const student = new EnrollStudent();
+    student.name = name;
+    student.code = code;
+    student.userId = user_id;
+    student.role = role;
+
+    if (!this.state.enrollStudents.some((item) => item.userId != user_id)) {
+      this.state.enrollStudents.push(student);
+    }
   }
 
   private createPlayer(client: Client, options: any): Player {
     const player = new Player();
     player.connected = true;
     player.sessionId = client.sessionId;
-    player.name = options.name;
-    player.code = options.code;
+    // player.name = options.name;
+    // player.code = options.code;
     player.userId = options.user_id;
 
     if (options.role && options.role == PlayerRole.TEACHER) {

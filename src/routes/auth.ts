@@ -29,6 +29,7 @@ const router = Router();
  *         description: Login successfully
  */
 router.post("/login", AuthController.login);
+router.post("/login-portal", AuthController.loginPortal);
 
 router.post("/check-token", checkJwt, AuthController.checkToken);
 

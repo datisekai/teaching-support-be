@@ -45,6 +45,10 @@ class AuthController {
       res.status(400).send({ message: "user is not active", success: false });
     }
 
+    if (user && user.role !== UserRole.STUDENT) {
+      res.status(403).send({ message: "Forbidden", success: false });
+    }
+
     //Check if encrypted password match
     if (!passwordCompare(password, user.salt, user.password)) {
       res.status(401).send({
@@ -72,6 +76,76 @@ class AuthController {
       },
     });
   };
+
+  static loginPortal = async (req: Request, res: Response) => {
+    //Check if username and password are set
+    let { code, password } = req.body;
+    if (!(code && password)) {
+      res
+        .status(400)
+        .send({ message: "code & password is required", success: false });
+    }
+
+    //Get user from database
+    const userRepository = myDataSource.getRepository(User);
+    let user: User;
+    try {
+      user = await userRepository.findOneOrFail({
+        where: { code, is_deleted: false },
+        select: [
+          "id",
+          "active",
+          "code",
+          "email",
+          "password",
+          "salt",
+          "role",
+          "name",
+        ],
+      });
+    } catch (error) {
+      res
+        .status(401)
+        .send({ message: "code or password is wrong", success: false });
+    }
+    console.log(user);
+
+    if (user && !user.active) {
+      res.status(400).send({ message: "user is not active", success: false });
+    }
+
+    //Check if encrypted password match
+    if (!passwordCompare(password, user.salt, user.password)) {
+      res.status(401).send({
+        message: "Unauthorized",
+        success: false,
+      });
+      return;
+    }
+
+    //Sing JWT, valid for 1 hour
+    const token = jwt.sign(
+      { id: user.id, code: user.code, email: user.email },
+      config.jwtSecret,
+      { expiresIn: "7d" }
+    );
+
+    if (user && user.role === UserRole.STUDENT) {
+      res.status(403).send({ message: "Forbidden", success: false });
+    }
+
+    delete user["password"];
+    delete user["salt"];
+    //Send the jwt in the response
+    res.send({
+      success: true,
+      data: {
+        token,
+        user,
+      },
+    });
+  };
+
   static checkToken = async (req: Request, res: Response) => {
     return res.send({ success: true });
   };

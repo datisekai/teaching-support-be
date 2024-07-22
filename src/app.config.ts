@@ -39,6 +39,7 @@ export default config({
       .initialize()
       .then(() => {
         console.log("Data Source has been initialized!");
+        ColyseusService.initRoomAfterRestart();
       })
       .catch((err) => {
         console.error("Error during Data Source initialization:", err);
@@ -73,10 +74,6 @@ export default config({
     app.use("/api.course", courseRoute);
     app.use("/api.group", groupRoute);
     app.use("/api.room", roomRoute);
-
-    setTimeout(() => {
-      ColyseusService.initRoomAfterRestart();
-    }, 2000);
 
     swaggerDocs(app);
 
