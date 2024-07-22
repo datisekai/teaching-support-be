@@ -51,6 +51,15 @@ defineTypes(
   {
     connected: "boolean",
     sessionId: "string",
+    userId: "number",
+    role: "string",
+  },
+  { context }
+);
+
+defineTypes(
+  EnrollStudent,
+  {
     code: "string",
     name: "string",
     userId: "number",
@@ -74,14 +83,14 @@ defineTypes(
 class State extends Schema {
   public players = new MapSchema<Player>();
   public data: RoomData;
-  public enrollStudents = new ArraySchema<EnrollStudent>();
+  public enrollStudents = new MapSchema<EnrollStudent>();
 }
 defineTypes(
   State,
   {
     players: { map: Player },
     data: RoomData,
-    enrollStudents: [EnrollStudent],
+    enrollStudents: { map: EnrollStudent },
   },
   { context }
 );
@@ -258,8 +267,11 @@ export class MyRoom extends Room<State> {
     student.userId = user_id;
     student.role = role;
 
-    if (!this.state.enrollStudents.some((item) => item.userId != user_id)) {
-      this.state.enrollStudents.push(student);
+    if (
+      !this.state.enrollStudents.has(student.userId.toString()) &&
+      student.role == PlayerRole.STUDENT
+    ) {
+      this.state.enrollStudents.set(student.userId.toString(), student);
     }
   }
 
