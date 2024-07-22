@@ -269,7 +269,7 @@ export class MyRoom extends Room<State> {
 
     if (
       !this.state.enrollStudents.has(student.userId.toString()) &&
-      student.role == PlayerRole.STUDENT
+      student.role != PlayerRole.TEACHER
     ) {
       this.state.enrollStudents.set(student.userId.toString(), student);
     }
