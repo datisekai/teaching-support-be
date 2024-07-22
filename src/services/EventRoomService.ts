@@ -1,7 +1,4 @@
-import { FindOneOptions } from "typeorm";
 import { myDataSource } from "../app-data-source";
-import { Room } from "../entity/room.entity";
-import { ColyseusService } from "./ColyseusService";
 import { EventRoom } from "../entity/event-room.entity";
 
 export class EventRoomService {
@@ -21,11 +18,12 @@ export class EventRoomService {
       if (existed && existed.success) {
         return true;
       }
-      await eventRoomRepository.create({
+      const eventRoom = {
         room_id: roomId,
         student_id: studentId,
         success,
-      });
+      };
+      await eventRoomRepository.save(eventRoom);
       return true;
     } catch (error) {
       return false;
