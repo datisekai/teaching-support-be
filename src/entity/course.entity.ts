@@ -6,9 +6,11 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { User } from "./user.entity";
 import { Department } from "./department.entity";
+import { Group } from "./group.entity";
 
 @Entity()
 export class Course {
@@ -36,4 +38,7 @@ export class Course {
 
   @Column({ default: false, type: "boolean", select: false })
   is_deleted: Boolean;
+
+  @OneToMany(() => Group, (group) => group.course)
+  groups: Group[];
 }

@@ -9,9 +9,11 @@ import {
   JoinTable,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
 import { Course } from "./course.entity";
 import { User } from "./user.entity";
+import { Room } from "./room.entity";
 
 @Entity()
 @Unique(["course_id", "due_date"])
@@ -51,4 +53,7 @@ export class Group {
 
   @Column({ default: false, type: "boolean", select: false })
   is_deleted: Boolean;
+
+  @OneToMany(() => Room, (room) => room.group)
+  rooms: Room[];
 }

@@ -45,7 +45,7 @@ class CourseController {
           id,
           is_deleted: false,
         },
-        relations: ["department"],
+        relations: ["department", "groups"],
       });
       res.send({
         success: true,

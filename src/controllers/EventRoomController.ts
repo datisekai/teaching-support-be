@@ -33,7 +33,17 @@ class EventRoomController {
           student_id: userId,
           success: true,
         },
-        relations: ["room", "student"],
+        relations: {
+          room: {
+            group: {
+              course: {
+                department: true,
+              },
+              teacher: true,
+            },
+          },
+          student: true,
+        },
       });
 
       return res.send({

@@ -4,7 +4,9 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+import { Course } from "./course.entity";
 
 @Entity()
 export class Department {
@@ -25,4 +27,7 @@ export class Department {
 
   @Column({ default: false, type: "boolean", select: false })
   is_deleted: Boolean;
+
+  @OneToMany(() => Course, (course) => course.department)
+  courses: Course[];
 }

@@ -47,7 +47,7 @@ class GroupController {
           id,
           is_deleted: false,
         },
-        relations: ["course", "teacher", "members"],
+        relations: ["course", "teacher", "members", "rooms"],
       });
       res.send({
         success: true,

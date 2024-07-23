@@ -32,7 +32,12 @@ class RoomController {
         is_deleted: false,
         owner_id: userId,
       },
-      relations: ["owner", "group"],
+      relations: {
+        owner: true,
+        group: {
+          course: true,
+        },
+      },
     });
 
     res.send({ message: "success", data: rooms });
