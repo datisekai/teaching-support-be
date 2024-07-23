@@ -29,7 +29,9 @@ class DepartmentController {
           id,
           is_deleted: false,
         },
-        relations: ["courses"],
+        relations: {
+          courses: true,
+        },
       });
       res.send({
         success: true,

@@ -16,7 +16,6 @@ import { User } from "./user.entity";
 import { Room } from "./room.entity";
 
 @Entity()
-@Unique(["course_id", "due_date"])
 export class Group {
   @PrimaryGeneratedColumn()
   id: number;
