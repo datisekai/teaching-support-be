@@ -35,11 +35,11 @@ export class RoomService {
     await roomRepository.save(room);
     return true;
   };
-  static resetStatus = async (id: number[]) => {
+  static stopRoom = async (id: number[]) => {
     const roomRepository = myDataSource.getRepository(Room);
     let room: Room;
     try {
-      await roomRepository.update(id, { status: RoomStatus.READY });
+      await roomRepository.update(id, { status: RoomStatus.STOP });
     } catch (error) {
       return false;
     }

@@ -179,6 +179,7 @@ export class MyRoom extends Room<State> {
       allowReconnectionTime: number;
       metadata: any;
       data: RoomData;
+      enrollStudents: EnrollStudent[];
     }>
   ) {
     if (options.maxClients) {
@@ -196,6 +197,12 @@ export class MyRoom extends Room<State> {
     if (options.data) {
       this.state.data = this.createRoomData(options.data);
       this.setMetadata({ id: options.data.id });
+    }
+
+    if (options.enrollStudents && options.enrollStudents.length > 0) {
+      options.enrollStudents.forEach((item) => {
+        this.state.enrollStudents.set(item.userId.toString(), item);
+      });
     }
   }
 

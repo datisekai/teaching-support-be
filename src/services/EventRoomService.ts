@@ -29,4 +29,19 @@ export class EventRoomService {
       return false;
     }
   };
+  static getEnrollStudentOfRoomId = async (roomId: number) => {
+    const eventRoomRepository = myDataSource.getRepository(EventRoom);
+    try {
+      const events = await eventRoomRepository.find({
+        where: {
+          room_id: roomId,
+          success: true,
+        },
+        relations: ["student"],
+      });
+      return events;
+    } catch (error) {
+      return [];
+    }
+  };
 }

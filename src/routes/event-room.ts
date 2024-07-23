@@ -13,4 +13,7 @@ router.get(
   EventRoomController.listAllByRoomId
 );
 
+//Get my event room
+router.get("/me", [checkJwt], EventRoomController.listAllMyEventRoom);
+
 export default router;

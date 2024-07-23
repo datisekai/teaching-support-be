@@ -1,6 +1,7 @@
 import { Room, matchMaker } from "colyseus";
 import { RoomStatus } from "../dto/RoomDto";
 import { RoomService } from "./RoomService";
+import { EventRoomService } from "./EventRoomService";
 export class ColyseusService {
   static createRoom = async (data: any) => {
     try {
@@ -37,13 +38,24 @@ export class ColyseusService {
   static initRoomAfterRestart = async () => {
     const activeRooms = await RoomService.getAll();
     const scanRoomIds = [];
-    activeRooms.forEach((item) => {
+
+    for (const item of activeRooms) {
       if (item.status == RoomStatus.SCAN) {
         scanRoomIds.push(item.id);
         item.status = RoomStatus.READY;
       }
-    });
-    await RoomService.resetStatus(scanRoomIds);
+      const events = await EventRoomService.getEnrollStudentOfRoomId(item.id);
+      if (events.length > 0) {
+        (item as any).enrollStudents = events.map((item) => ({
+          code: item.student.code,
+          name: item.student.name,
+          role: item.student.role,
+          userId: item.student.id,
+        }));
+      }
+    }
+    await RoomService.stopRoom(scanRoomIds);
+
     for (const room of activeRooms) {
       await this.createRoom(room);
     }
