@@ -59,20 +59,19 @@ class DepartmentController {
     //Try to save. If fails, the email is already in use
     const departmentRepository = myDataSource.getRepository(Department);
     try {
-      await departmentRepository.save(department);
+      const departmentSaved = await departmentRepository.save(department);
+      //If all ok, send 201 response
+      res.status(201).send({
+        success: true,
+        message: "Department created",
+        data: departmentSaved,
+      });
     } catch (e) {
       res
         .status(409)
         .send({ success: false, message: "create department failed" });
       return;
     }
-
-    //If all ok, send 201 response
-    res.status(201).send({
-      success: true,
-      message: "Department created",
-      data: department,
-    });
   };
 
   static editDepartment = async (req: Request, res: Response) => {

@@ -139,21 +139,23 @@ class RoomController {
         });
       }
 
-      await roomRepository.save({ ...room, owner_id: userId });
+      const roomSaved = await roomRepository.save({
+        ...room,
+        owner_id: userId,
+      });
 
-      await ColyseusService.createRoom(room);
+      await ColyseusService.createRoom(roomSaved);
+      res.status(201).send({
+        success: true,
+        message: "Room created",
+        data: roomSaved,
+      });
     } catch (e) {
       res
         .status(409)
         .send({ success: false, message: "Error, create room failed" });
       return;
     }
-
-    res.status(201).send({
-      success: true,
-      message: "Room created",
-      data: room,
-    });
   };
 
   static editRoom = async (req: Request, res: Response) => {

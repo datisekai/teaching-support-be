@@ -77,18 +77,19 @@ class GroupController {
     //Try to save. If fails, the email is already in use
     const groupRepository = myDataSource.getRepository(Group);
     try {
-      await groupRepository.save(group);
+      const groupSaved = await groupRepository.save(group);
+
+      res.status(201).send({
+        success: true,
+        message: "Group created",
+        data: groupSaved,
+      });
     } catch (e) {
       res.status(409).send({ success: false, message: "create group failed" });
       return;
     }
 
     //If all ok, send 201 response
-    res.status(201).send({
-      success: true,
-      message: "Group created",
-      data: group,
-    });
   };
 
   static editGroup = async (req: Request, res: Response) => {

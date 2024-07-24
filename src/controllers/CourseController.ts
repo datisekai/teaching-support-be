@@ -74,18 +74,18 @@ class CourseController {
     //Try to save. If fails, the email is already in use
     const courseRepository = myDataSource.getRepository(Course);
     try {
-      await courseRepository.save(course);
+      const courseSaved = await courseRepository.save(course);
+
+      //If all ok, send 201 response
+      res.status(201).send({
+        success: true,
+        message: "Department created",
+        data: courseSaved,
+      });
     } catch (e) {
       res.status(409).send({ success: false, message: "create course failed" });
       return;
     }
-
-    //If all ok, send 201 response
-    res.status(201).send({
-      success: true,
-      message: "Department created",
-      data: course,
-    });
   };
 
   static editCourse = async (req: Request, res: Response) => {

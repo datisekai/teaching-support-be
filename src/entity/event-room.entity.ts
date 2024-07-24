@@ -6,11 +6,13 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Unique,
 } from "typeorm";
 import { User } from "./user.entity";
 import { Room } from "./room.entity";
 
 @Entity()
+@Unique(["student_id", "room_id", "success"])
 export class EventRoom {
   @PrimaryGeneratedColumn()
   id: number;

@@ -110,19 +110,20 @@ class UserController {
     //Try to save. If fails, the email is already in use
     const userRepository = myDataSource.getRepository(User);
     try {
-      await userRepository.save(user);
+      const userSaved = await userRepository.save(user);
+
+      //If all ok, send 201 response
+      res.status(201).send({
+        success: true,
+        message: "User created",
+        data: userSaved,
+      });
     } catch (e) {
       res
         .status(409)
         .send({ success: false, message: "code or email already in use" });
       return;
     }
-
-    //If all ok, send 201 response
-    res.status(201).send({
-      success: true,
-      message: "User created",
-    });
   };
 
   static editUser = async (req: Request, res: Response) => {
@@ -220,7 +221,6 @@ class UserController {
   };
 
   static getMyInfo = async (req: Request, res: Response) => {
-
     const userId = res.locals.jwtPayload.id;
     //Get the user from database
     const userRepository = myDataSource.getRepository(User);
