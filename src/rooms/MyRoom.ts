@@ -247,16 +247,9 @@ export class MyRoom extends Room<State> {
       throw new Error("qr_key is invalid");
     }
 
-    const success = await EventRoomService.addEventRoom(
-      this.state.data.id,
-      user_id,
-      true
-    );
-    if (success) {
-      return client;
-    }
+    await EventRoomService.addEventRoom(this.state.data.id, user_id, true);
 
-    throw new Error("add event room failed");
+    return client;
   }
 
   public onJoin(client: Client, options: any = {}) {
