@@ -5,8 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
+  AfterUpdate,
 } from "typeorm";
 import { Course } from "./course.entity";
+import { myDataSource } from "../app-data-source";
 
 @Entity()
 export class Department {
@@ -30,4 +32,12 @@ export class Department {
 
   @OneToMany(() => Course, (course) => course.department)
   courses: Course[];
+
+  @AfterUpdate()
+  async afterUpdate() {
+    if (this.is_deleted) {
+      const courseRepository = myDataSource.getRepository(Course);
+      await courseRepository.update({ department: this }, { is_deleted: true });
+    }
+  }
 }

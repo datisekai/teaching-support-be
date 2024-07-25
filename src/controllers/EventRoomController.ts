@@ -35,12 +35,9 @@ class EventRoomController {
         },
         relations: {
           room: {
-            is_deleted: false,
             group: {
-              is_deleted: false,
               course: {
                 department: true,
-                is_deleted: false,
               },
               teacher: true,
             },
