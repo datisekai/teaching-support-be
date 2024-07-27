@@ -38,6 +38,9 @@ class RoomController {
           course: true,
         },
       },
+      order: {
+        created_at: "DESC",
+      },
     });
 
     res.send({ message: "success", data: rooms });

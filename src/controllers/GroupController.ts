@@ -16,6 +16,9 @@ class GroupController {
         is_deleted: false,
       },
       relations: ["course", "teacher"],
+      order: {
+        created_at: "DESC",
+      },
     });
 
     res.send({

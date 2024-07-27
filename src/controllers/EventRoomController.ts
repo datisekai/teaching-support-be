@@ -44,6 +44,9 @@ class EventRoomController {
           },
           student: true,
         },
+        order: {
+          created_at: "DESC",
+        },
       });
 
       return res.send({

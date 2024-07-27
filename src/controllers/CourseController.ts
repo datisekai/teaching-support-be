@@ -14,6 +14,9 @@ class CourseController {
         is_deleted: false,
       },
       relations: ["department"],
+      order: {
+        created_at: "DESC",
+      },
     });
 
     res.send({
