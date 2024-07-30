@@ -150,18 +150,23 @@ export class MyRoom extends Room<State> {
     this.state.data.status = status;
   }
 
+  public generateQRKey(): void {
+    const payload = {
+      roomId: this.state.data.id,
+      time: Date.now(),
+      room_socket_id: this.roomId,
+      room_socket_name: this.roomName,
+    };
+    const token = jwt.sign(payload, config.jwtSecret, {
+      expiresIn: 5,
+    });
+    this.state.data.qr_key = token;
+  }
+
   public startJwtInterval(): void {
+    this.generateQRKey();
     this.jwtInterval = setInterval(() => {
-      const payload = {
-        roomId: this.state.data.id,
-        time: Date.now(),
-        room_socket_id: this.roomId,
-        room_socket_name: this.roomName,
-      };
-      const token = jwt.sign(payload, config.jwtSecret, {
-        expiresIn: 5,
-      });
-      this.state.data.qr_key = token;
+      this.generateQRKey();
     }, 5000);
   }
 

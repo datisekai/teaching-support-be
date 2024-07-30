@@ -19,7 +19,7 @@ export class Room {
   @Column("varchar")
   title: string;
 
-  @Column("text")
+  @Column({ type: "text", nullable: true })
   description: string;
 
   @Column("varchar")

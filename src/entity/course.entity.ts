@@ -19,6 +19,9 @@ export class Course {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ unique: true, nullable: true, type: "varchar" })
+  code: string;
+
   @Column("varchar")
   name: string;
 

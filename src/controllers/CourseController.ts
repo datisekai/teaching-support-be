@@ -61,11 +61,12 @@ class CourseController {
 
   static newCourse = async (req: Request, res: Response) => {
     //Get parameters from the body
-    let { name, description, department_id } = req.body;
+    let { name, description, department_id, code } = req.body;
     let course = new CourseDto();
     course.description = description || "";
     course.name = name;
     course.department_id = department_id;
+    course.code = code;
 
     //Validade if the parameters are ok
     const errors = await validate(course);
@@ -96,7 +97,7 @@ class CourseController {
     const id = +req.params.id;
 
     //Get values from the body
-    const { name, description, department_id } = req.body;
+    const { name, description, department_id, code } = req.body;
 
     //Try to find user on database
     const courseRepository = myDataSource.getRepository(Course);
@@ -117,6 +118,7 @@ class CourseController {
     course.name = name || course.name;
     course.description = description || course.description;
     course.department_id = department_id || course.department_id;
+    course.code = code || course.code;
 
     const errors = await validate(course);
     if (errors.length > 0) {

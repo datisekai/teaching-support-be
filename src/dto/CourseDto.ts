@@ -12,4 +12,8 @@ export class CourseDto {
   @IsNotEmpty()
   @IsNumber()
   department_id: number;
+
+  @IsNotEmpty()
+  @IsString()
+  code: string;
 }

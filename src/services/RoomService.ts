@@ -32,6 +32,9 @@ export class RoomService {
       return false;
     }
     room.status = status;
+    if (room.status == RoomStatus.FINISH) {
+      room.active = false;
+    }
     await roomRepository.save(room);
     return true;
   };
