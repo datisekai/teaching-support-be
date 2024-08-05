@@ -36,7 +36,7 @@ class AuthController {
       });
     } catch (error) {
       res
-        .status(401)
+        .status(400)
         .send({ message: "code or password is wrong", success: false });
     }
     console.log(user);
@@ -51,8 +51,8 @@ class AuthController {
 
     //Check if encrypted password match
     if (!passwordCompare(password, user.salt, user.password)) {
-      res.status(401).send({
-        message: "Unauthorized",
+      res.status(400).send({
+        message: "code or password is wrong",
         success: false,
       });
       return;
@@ -105,7 +105,7 @@ class AuthController {
       });
     } catch (error) {
       res
-        .status(401)
+        .status(400)
         .send({ message: "code or password is wrong", success: false });
     }
     console.log(user);
@@ -116,8 +116,8 @@ class AuthController {
 
     //Check if encrypted password match
     if (!passwordCompare(password, user.salt, user.password)) {
-      res.status(401).send({
-        message: "Unauthorized",
+      res.status(400).send({
+        message: "code or password is wrong",
         success: false,
       });
       return;
