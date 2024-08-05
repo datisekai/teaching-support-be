@@ -10,6 +10,12 @@ const router = Router();
 router.get(
   "/:id([0-9]+)",
   [checkJwt, checkRole([UserRole.ADMIN, UserRole.TEACHER])],
+  EventRoomController.listAllSuccessByRoomId
+);
+
+router.get(
+  "/logs/:id([0-9]+)",
+  [checkJwt, checkRole([UserRole.ADMIN, UserRole.TEACHER])],
   EventRoomController.listAllByRoomId
 );
 
