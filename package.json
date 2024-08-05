@@ -46,7 +46,8 @@
     "clean": "rimraf build",
     "loadtest": "tsx loadtest/example.ts --room my_room --numClients 2",
     "start": "tsx watch src/index.ts",
-    "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000"
+    "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000",
+    "sync-vps": "npm run build && rsync -azP build/** root@14.225.220.10:~/teaching-support/teaching-support-be/build"
   },
   "private": true,
   "license": "UNLICENSED"
