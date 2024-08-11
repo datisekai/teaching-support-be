@@ -5,6 +5,7 @@ import { DepartmentDto } from "../dto/DepartmentDto";
 import { Department } from "../entity/department.entity";
 import { Course } from "../entity/course.entity";
 import { CourseDto } from "../dto/CourseDto";
+import { Group } from "../entity/group.entity";
 
 class CourseController {
   static listAll = async (req: Request, res: Response) => {
@@ -143,11 +144,23 @@ class CourseController {
     const id = +req.params.id;
 
     const courseRepository = myDataSource.getRepository(Course);
+    const groupRepository = myDataSource.getRepository(Group);
     let course: Course;
     try {
       course = await courseRepository.findOneOrFail({
         where: { id, is_deleted: false },
       });
+      const groups = await groupRepository.find({
+        where: {
+          course_id: course.id,
+          is_deleted: false,
+        },
+      });
+      if (groups.length > 0) {
+        return res
+          .status(409)
+          .send({ success: false, message: "course has groups" });
+      }
     } catch (error) {
       res.status(404).send({ success: false, message: "course not found" });
       return;

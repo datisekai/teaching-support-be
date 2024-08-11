@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import { myDataSource } from "../app-data-source";
 import { DepartmentDto } from "../dto/DepartmentDto";
 import { Department } from "../entity/department.entity";
+import { Course } from "../entity/course.entity";
 
 class DepartmentController {
   static listAll = async (req: Request, res: Response) => {
@@ -126,11 +127,24 @@ class DepartmentController {
     const id = +req.params.id;
 
     const departmentRepository = myDataSource.getRepository(Department);
+    const courseRepository = myDataSource.getRepository(Course);
     let department: Department;
+
     try {
       department = await departmentRepository.findOneOrFail({
         where: { id, is_deleted: false },
       });
+      const courses = await courseRepository.find({
+        where: {
+          department_id: department.id,
+          is_deleted: false,
+        },
+      });
+      if (courses && courses.length > 0) {
+        return res
+          .status(409)
+          .send({ success: false, message: "Department has courses" });
+      }
     } catch (error) {
       res.status(404).send({ success: false, message: "Department not found" });
       return;

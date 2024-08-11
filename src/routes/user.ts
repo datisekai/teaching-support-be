@@ -34,7 +34,7 @@ router.get(
  *         description: Get My Info successfully
  */
 router.get("/me", [checkJwt], UserController.getMyInfo);
-
+router.get("/teacher", [checkJwt], UserController.getAllTeacher);
 // Get one user
 router.get(
   "/:id([0-9]+)",

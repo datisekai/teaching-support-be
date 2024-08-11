@@ -4,7 +4,7 @@ import { validate } from "class-validator";
 import { User } from "../entity/user.entity";
 import { passwordHash } from "../utils";
 import { myDataSource } from "../app-data-source";
-import { UserDto } from "../dto/UserDto";
+import { UserDto, UserRole } from "../dto/UserDto";
 
 class UserController {
   static listAll = async (req: Request, res: Response) => {
@@ -251,6 +251,25 @@ class UserController {
     } catch (error) {
       res.status(404).send({ message: "User not found", success: false });
     }
+  };
+
+  static getAllTeacher = async (req: Request, res: Response) => {
+    const userRepository = myDataSource.getRepository(User);
+    const users = await userRepository.find({
+      where: {
+        is_deleted: false,
+        role: UserRole.TEACHER,
+      },
+      select: ["id", "email", "name"],
+    });
+
+    //Send the users object
+    res.send({
+      message: "success",
+      data: {
+        users,
+      },
+    });
   };
 }
 
