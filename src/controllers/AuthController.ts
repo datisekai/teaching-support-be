@@ -12,7 +12,7 @@ class AuthController {
     //Check if username and password are set
     let { code, password } = req.body;
     if (!(code && password)) {
-      res
+      return res
         .status(400)
         .send({ message: "code & password is required", success: false });
     }
@@ -35,18 +35,20 @@ class AuthController {
         ],
       });
     } catch (error) {
-      res
+      return res
         .status(400)
         .send({ message: "code or password is wrong", success: false });
     }
     console.log(user);
 
     if (user && !user.active) {
-      res.status(400).send({ message: "user is not active", success: false });
+      return res
+        .status(400)
+        .send({ message: "user is not active", success: false });
     }
 
     if (user && user.role !== UserRole.STUDENT) {
-      res.status(403).send({ message: "Forbidden", success: false });
+      return res.status(403).send({ message: "Forbidden", success: false });
     }
 
     //Check if encrypted password match
@@ -68,7 +70,7 @@ class AuthController {
     delete user["password"];
     delete user["salt"];
     //Send the jwt in the response
-    res.send({
+    return res.send({
       success: true,
       data: {
         token,
@@ -107,11 +109,13 @@ class AuthController {
       res
         .status(400)
         .send({ message: "code or password is wrong", success: false });
+      return;
     }
     console.log(user);
 
     if (user && !user.active) {
       res.status(400).send({ message: "user is not active", success: false });
+      return;
     }
 
     //Check if encrypted password match
@@ -131,13 +135,14 @@ class AuthController {
     );
 
     if (user && user.role === UserRole.STUDENT) {
-      res.status(403).send({ message: "Forbidden", success: false });
+      res.status(403).json({ message: "Forbidden", success: false });
+      return;
     }
 
     delete user["password"];
     delete user["salt"];
     //Send the jwt in the response
-    res.send({
+    return res.status(200).json({
       success: true,
       data: {
         token,
