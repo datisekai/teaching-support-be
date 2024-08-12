@@ -46,7 +46,8 @@
     "clean": "rimraf build",
     "loadtest": "tsx loadtest/example.ts --room my_room --numClients 2",
     "start": "tsx watch src/index.ts",
-    "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000"
+    "test": "mocha -r tsx test/**_test.ts --exit --timeout 15000",
+    "dev": "tsx watch src/index.ts"
   },
   "private": true,
   "license": "UNLICENSED"
