@@ -83,7 +83,7 @@ class AuthController {
     //Check if username and password are set
     let { code, password } = req.body;
     if (!(code && password)) {
-      res
+      return res
         .status(400)
         .send({ message: "code & password is required", success: false });
     }
