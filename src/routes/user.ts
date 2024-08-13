@@ -43,11 +43,11 @@ router.get(
 );
 
 //Create a new user
-router.post(
-  "/",
-  [checkJwt, checkRole([UserRole.ADMIN, UserRole.TEACHER])],
-  UserController.newUser
-);
+// router.post(
+//   "/",
+//   [checkJwt, checkRole([UserRole.ADMIN, UserRole.TEACHER])],
+//   UserController.newUser
+// );
 // router.post("/", UserController.newUser);
 
 router.put(

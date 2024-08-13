@@ -9,7 +9,7 @@ import {
 } from "typeorm";
 
 @Entity()
-@Unique(["code","device_uid"])
+@Unique(["code", "device_uid"])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,8 +27,7 @@ export class User {
   phone: string;
 
   @Column({
-    type: "enum",
-    enum: ["admin", "teacher", "student"],
+    type: "varchar",
   })
   role: string;
 
@@ -46,13 +45,6 @@ export class User {
     nullable: true,
   })
   device_uid: string;
-
-  @Column({
-    select: false,
-    nullable: true,
-    type: "varchar",
-  })
-  salt: string;
 
   @CreateDateColumn()
   created_at: Date;

@@ -10,9 +10,9 @@ import {
 } from "class-validator";
 
 export enum UserRole {
-  ADMIN = "admin",
-  STUDENT = "student",
-  TEACHER = "teacher",
+  ADMIN = "ADMIN",
+  STUDENT = "SINHVIEN",
+  TEACHER = "GIANGVIEN",
 }
 
 export class UserDto {
@@ -56,8 +56,4 @@ export class UserDto {
   @IsString()
   @IsEnum(UserRole)
   role: UserRole;
-
-  @IsOptional()
-  @IsString()
-  salt: string;
 }

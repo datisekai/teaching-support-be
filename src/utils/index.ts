@@ -1,4 +1,5 @@
 import bcrypt = require("bcryptjs");
+import { encode, decode } from "js-base64";
 export const randomNumber = (count: number) => {
   let result = "";
   for (let i = 0; i < count; i++) {
@@ -188,4 +189,12 @@ export function randomString(length: number) {
     counter += 1;
   }
   return result;
+}
+
+export function encodeBase64(str: string) {
+  return encode(encode(str));
+}
+
+export function decodeBase64(str: string) {
+  return decode(decode(str));
 }

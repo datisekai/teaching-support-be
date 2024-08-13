@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { getRepository } from "typeorm";
 import { validate } from "class-validator";
 import { User } from "../entity/user.entity";
-import { passwordHash } from "../utils";
+import { encodeBase64, passwordHash } from "../utils";
 import { myDataSource } from "../app-data-source";
 import { UserDto, UserRole } from "../dto/UserDto";
 
@@ -71,60 +71,60 @@ class UserController {
     }
   };
 
-  static newUser = async (req: Request, res: Response) => {
-    //Get parameters from the body
-    let {
-      email,
-      password,
-      active,
-      phone,
-      role,
-      name,
-      avatar,
-      device_uid,
-      code,
-    } = req.body;
-    let user = new UserDto();
-    user.email = email;
-    user.password = password;
-    user.active = active;
-    user.phone = phone;
-    user.role = role;
-    user.name = name;
-    user.avatar = avatar;
-    user.device_uid = device_uid;
-    user.code = code;
+  // static newUser = async (req: Request, res: Response) => {
+  //   //Get parameters from the body
+  //   let {
+  //     email,
+  //     password,
+  //     active,
+  //     phone,
+  //     role,
+  //     name,
+  //     avatar,
+  //     device_uid,
+  //     code,
+  //   } = req.body;
+  //   let user = new UserDto();
+  //   user.email = email;
+  //   user.password = password;
+  //   user.active = active;
+  //   user.phone = phone;
+  //   user.role = role;
+  //   user.name = name;
+  //   user.avatar = avatar;
+  //   user.device_uid = device_uid;
+  //   user.code = code;
 
-    //Validade if the parameters are ok
-    const errors = await validate(user);
-    if (errors.length > 0) {
-      res.status(400).send({ success: false, errors });
-      return;
-    }
+  //   //Validade if the parameters are ok
+  //   const errors = await validate(user);
+  //   if (errors.length > 0) {
+  //     res.status(400).send({ success: false, errors });
+  //     return;
+  //   }
 
-    const { hash, salt } = passwordHash(password);
+  //   const { hash, salt } = passwordHash(password);
 
-    user.password = hash;
-    user.salt = salt;
+  //   user.password = hash;
+  //   user.salt = salt;
 
-    //Try to save. If fails, the email is already in use
-    const userRepository = myDataSource.getRepository(User);
-    try {
-      const userSaved = await userRepository.save(user);
+  //   //Try to save. If fails, the email is already in use
+  //   const userRepository = myDataSource.getRepository(User);
+  //   try {
+  //     const userSaved = await userRepository.save(user);
 
-      //If all ok, send 201 response
-      res.status(201).send({
-        success: true,
-        message: "User created",
-        data: userSaved,
-      });
-    } catch (e) {
-      res
-        .status(409)
-        .send({ success: false, message: "code or email already in use" });
-      return;
-    }
-  };
+  //     //If all ok, send 201 response
+  //     res.status(201).send({
+  //       success: true,
+  //       message: "User created",
+  //       data: userSaved,
+  //     });
+  //   } catch (e) {
+  //     res
+  //       .status(409)
+  //       .send({ success: false, message: "code or email already in use" });
+  //     return;
+  //   }
+  // };
 
   static editUser = async (req: Request, res: Response) => {
     //Get the ID from the url
@@ -156,9 +156,9 @@ class UserController {
     user.name = name || user.name;
     user.avatar = avatar || user.avatar;
     if (password) {
-      const { hash, salt } = passwordHash(password);
-      user.password = hash;
-      user.salt = salt;
+      // const { hash, salt } = passwordHash(password);
+      user.password = encodeBase64(password);
+      // user.salt = salt;
     }
 
     if (active != null) {

@@ -4,8 +4,9 @@ import * as jwt from "jsonwebtoken";
 import { myDataSource } from "../app-data-source";
 import config from "../config/config";
 import { User } from "../entity/user.entity";
-import { passwordCompare } from "../utils";
+import { encodeBase64, passwordCompare } from "../utils";
 import { UserRole } from "../dto/UserDto";
+import { AuthService } from "../services/AuthService";
 
 class AuthController {
   static login = async (req: Request, res: Response) => {
@@ -21,38 +22,50 @@ class AuthController {
     const userRepository = myDataSource.getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail({
+      user = await userRepository.findOne({
         where: { code, is_deleted: false },
-        select: [
-          "id",
-          "active",
-          "code",
-          "email",
-          "password",
-          "salt",
-          "role",
-          "name",
-        ],
+        select: ["id", "active", "code", "email", "password", "role", "name"],
       });
+
+      if (!user) {
+        const info = await AuthService.getInformation(code, password);
+        console.log("info", info);
+
+        if (!info) {
+          return res
+            .status(400)
+            .send({ message: "code or password is wrong", success: false });
+        }
+
+        user = new User();
+        user.code = code;
+        user.email = info.email;
+        user.name = info.ten_day_du;
+        user.role = info.roles;
+        user.phone = info.dien_thoai;
+        user.password = encodeBase64(password);
+        user.active = true;
+        await userRepository.save(user);
+      }
     } catch (error) {
       return res
         .status(400)
         .send({ message: "code or password is wrong", success: false });
     }
-    console.log(user);
 
+    console.log("user", user);
     if (user && !user.active) {
       return res
         .status(400)
         .send({ message: "user is not active", success: false });
     }
 
-    if (user && user.role !== UserRole.STUDENT) {
+    if (user && user.role != UserRole.STUDENT) {
       return res.status(403).send({ message: "Forbidden", success: false });
     }
 
     //Check if encrypted password match
-    if (!passwordCompare(password, user.salt, user.password)) {
+    if (encodeBase64(password) !== user.password) {
       res.status(400).send({
         message: "code or password is wrong",
         success: false,
@@ -68,7 +81,6 @@ class AuthController {
     );
 
     delete user["password"];
-    delete user["salt"];
     //Send the jwt in the response
     return res.send({
       success: true,
@@ -94,16 +106,7 @@ class AuthController {
     try {
       user = await userRepository.findOneOrFail({
         where: { code, is_deleted: false },
-        select: [
-          "id",
-          "active",
-          "code",
-          "email",
-          "password",
-          "salt",
-          "role",
-          "name",
-        ],
+        select: ["id", "active", "code", "email", "password", "role", "name"],
       });
     } catch (error) {
       res
