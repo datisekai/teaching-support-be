@@ -142,7 +142,7 @@ class UserController {
           id,
           is_deleted: false,
         },
-        select: ["id", "email", "password", "salt", "active"],
+        select: ["id", "email", "password", "active"],
       });
     } catch (error) {
       //If not found, send a 404 response
