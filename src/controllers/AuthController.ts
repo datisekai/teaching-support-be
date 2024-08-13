@@ -104,17 +104,36 @@ class AuthController {
     const userRepository = myDataSource.getRepository(User);
     let user: User;
     try {
-      user = await userRepository.findOneOrFail({
+      user = await userRepository.findOne({
         where: { code, is_deleted: false },
         select: ["id", "active", "code", "email", "password", "role", "name"],
       });
+
+      if (!user) {
+        const info = await AuthService.getInformation(code, password);
+        console.log("info", info);
+
+        if (!info) {
+          return res
+            .status(400)
+            .send({ message: "code or password is wrong", success: false });
+        }
+
+        user = new User();
+        user.code = code;
+        user.email = info.email;
+        user.name = info.ten_day_du;
+        user.role = info.roles;
+        user.phone = info.dien_thoai;
+        user.password = encodeBase64(password);
+        user.active = true;
+        await userRepository.save(user);
+      }
     } catch (error) {
-      res
+      return res
         .status(400)
         .send({ message: "code or password is wrong", success: false });
-      return;
     }
-    console.log(user);
 
     if (user && !user.active) {
       res.status(400).send({ message: "user is not active", success: false });
@@ -122,11 +141,16 @@ class AuthController {
     }
 
     //Check if encrypted password match
-    if (!passwordCompare(password, user.salt, user.password)) {
+    if (encodeBase64(password) !== user.password) {
       res.status(400).send({
         message: "code or password is wrong",
         success: false,
       });
+      return;
+    }
+
+    if (user && user.role == UserRole.STUDENT) {
+      res.status(403).json({ message: "Forbidden", success: false });
       return;
     }
 
@@ -137,13 +161,7 @@ class AuthController {
       { expiresIn: "7d" }
     );
 
-    if (user && user.role === UserRole.STUDENT) {
-      res.status(403).json({ message: "Forbidden", success: false });
-      return;
-    }
-
     delete user["password"];
-    delete user["salt"];
     //Send the jwt in the response
     return res.status(200).json({
       success: true,
