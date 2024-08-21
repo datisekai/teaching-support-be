@@ -4,7 +4,7 @@ import * as jwt from "jsonwebtoken";
 import { myDataSource } from "../app-data-source";
 import config from "../config/config";
 import { User } from "../entity/user.entity";
-import { encodeBase64, passwordCompare } from "../utils";
+import { encodeBase64, passwordCompare, saveBase64Image } from "../utils";
 import { UserRole } from "../dto/UserDto";
 import { AuthService } from "../services/AuthService";
 
@@ -29,7 +29,6 @@ class AuthController {
 
       if (!user) {
         const info = await AuthService.getInformation(code, password);
-        console.log("info", info);
 
         if (!info) {
           return res
@@ -45,6 +44,8 @@ class AuthController {
         user.phone = info.dien_thoai;
         user.password = encodeBase64(password);
         user.active = true;
+        console.log("user", user);
+        user.avatar = saveBase64Image(info.image, code);
         await userRepository.save(user);
       }
     } catch (error) {
@@ -111,7 +112,6 @@ class AuthController {
 
       if (!user) {
         const info = await AuthService.getInformation(code, password);
-        console.log("info", info);
 
         if (!info) {
           return res
@@ -127,6 +127,7 @@ class AuthController {
         user.phone = info.dien_thoai;
         user.password = encodeBase64(password);
         user.active = true;
+        user.avatar = saveBase64Image(info.image, code);
         await userRepository.save(user);
       }
     } catch (error) {

@@ -1,5 +1,8 @@
 import bcrypt = require("bcryptjs");
 import { encode, decode } from "js-base64";
+import fs from "fs";
+import path from "path";
+import { getPublicDir } from "../app.config";
 export const randomNumber = (count: number) => {
   let result = "";
   for (let i = 0; i < count; i++) {
@@ -197,4 +200,51 @@ export function encodeBase64(str: string) {
 
 export function decodeBase64(str: string) {
   return decode(decode(str));
+}
+
+export function dataURLtoBlob(dataurl) {
+  const arr = dataurl.split(",");
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new Blob([u8arr], { type: mime });
+}
+
+export function saveBase64Image(base64String: string, fileName: string) {
+  console.log("base64String", base64String);
+  const base64Real = `data:image/png;base64,${base64String}`;
+  // Tách tiền tố data URL (data:image/jpeg;base64, hoặc tương tự)
+  const matches = base64Real.match(/^data:image\/([a-zA-Z]+);base64,(.+)$/);
+  if (!matches) {
+    console.log("called");
+    throw new Error("Invalid base64 format");
+  }
+
+  const ext = matches[1]; // Lấy phần mở rộng từ base64 (ví dụ: png, jpg)
+  const data = matches[2]; // Lấy dữ liệu base64
+
+  // Đường dẫn lưu file trong thư mục public/images
+  const publicDir = getPublicDir();
+  const filePath = path.join(publicDir, "images", `${fileName}.${ext}`);
+
+  // Kiểm tra và tạo thư mục project/public/images nếu chưa tồn tại
+  if (!fs.existsSync(path.join(publicDir, "images"))) {
+    fs.mkdirSync(path.join(publicDir, "images"), {
+      recursive: true,
+    });
+  }
+  // Ghi file vào thư mục public/images
+  fs.writeFileSync(filePath, data, "base64");
+
+  console.log(`Image saved successfully to ${filePath}`);
+
+  const fileNameReturn = `public/images/${fileName}.${ext}`;
+
+  return fileNameReturn;
 }
