@@ -10,14 +10,11 @@ import courseRoute from "./routes/course";
 import groupRoute from "./routes/group";
 import eventRoomRoute from "./routes/event-room";
 import roomRoute from "./routes/room";
-<<<<<<< HEAD
 import statisticRoute from "./routes/statistic";
-=======
 import chapterRoute from "./routes/chapter";
 import difficultyRoute from "./routes/difficulty";
 import questionRoute from "./routes/question";
 import examRoute from "./routes/exam";
->>>>>>> 1686993028e8c8112f3738a6dee31b4ff1cc59b9
 import swaggerDocs from "./swagger";
 import uploadRoute from "./routes/upload";
 
@@ -83,15 +80,12 @@ export default config({
     app.use("/api.course", courseRoute);
     app.use("/api.group", groupRoute);
     app.use("/api.room", roomRoute);
-<<<<<<< HEAD
     app.use("/api.statistic", statisticRoute);
-=======
     app.use("/api.upload", uploadRoute);
     app.use("/api.chapter", chapterRoute);
     app.use("/api.difficulty", difficultyRoute);
     app.use("/api.question", questionRoute);
     app.use("/api.exam", examRoute);
->>>>>>> 1686993028e8c8112f3738a6dee31b4ff1cc59b9
 
     swaggerDocs(app);
 
