@@ -13,6 +13,8 @@ import { User } from "./user.entity";
 import { Department } from "./department.entity";
 import { Group } from "./group.entity";
 import { myDataSource } from "../app-data-source";
+import { Question } from "./question.entity";
+import { Exam } from "./exam.entity";
 
 @Entity()
 export class Course {
@@ -46,6 +48,9 @@ export class Course {
 
   @OneToMany(() => Group, (group) => group.course)
   groups: Group[];
+
+  @OneToMany(() => Question, (question) => question.course)
+  questions: Question[];
 
   @AfterUpdate()
   async afterUpdate() {
