@@ -72,7 +72,9 @@ export default config({
      * It is recommended to protect this route with a password
      * Read more: https://docs.colyseus.io/tools/monitor/#restrict-access-to-the-panel-using-a-password
      */
+
     app.use("/colyseus", monitor());
+    app.use("/public", express.static("public"));
     app.use("/api.auth", authRoute);
     app.use("/api.user", userRoute);
     app.use("/api.department", departmentRoute);
