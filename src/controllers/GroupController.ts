@@ -8,8 +8,33 @@ import { CourseDto } from "../dto/CourseDto";
 import { Group } from "../entity/group.entity";
 import { GroupDto } from "../dto/GroupDto";
 import { Room } from "../entity/room.entity";
+import { User } from "../entity/user.entity";
 
 class GroupController {
+  static listAllUserByCourseId = async (req: Request, res: Response) => {
+    const id: number = +req.params.id;
+
+    const groupRepository = myDataSource.getRepository(Group);
+
+    const group = await groupRepository.findOne({
+      where: {
+        id,
+        is_deleted: false,
+      },
+      relations: ["course", "members"],
+    });
+
+    if (!group) {
+      return res.status(404).send({
+        message: "Group not found",
+      });
+    }
+
+    res.send({
+      message: "success",
+      data: group,
+    });
+  };
   static listAll = async (req: Request, res: Response) => {
     const groupRepository = myDataSource.getRepository(Group);
     const groups = await groupRepository.find({
@@ -172,6 +197,66 @@ class GroupController {
     await groupRepository.save(group);
 
     res.status(200).send({ success: true, message: "group deleted" });
+  };
+  static createStudentsByGroupId = async (req: Request, res: Response) => {
+    const groupId = +req.params.id;
+    const { students } = req.body;
+    const userRepository = myDataSource.getRepository(User);
+    const groupRepository = myDataSource.getRepository(Group);
+
+    try {
+      // Kiểm tra sự tồn tại của Group
+      const group = await groupRepository.findOne({
+        where: { id: groupId },
+        relations: ["members"],
+      });
+      if (!group) {
+        return res
+          .status(404)
+          .send({ message: "Group not found", success: false });
+      }
+
+      const newUsers = [];
+      for (const student of students) {
+        const { code, password, email, phone, name } = student;
+
+        let existingUser = await userRepository.findOne({ where: { code } });
+        if (!existingUser) {
+          const newUser = userRepository.create({
+            code,
+            password,
+            email,
+            phone,
+            name,
+            role: "SINHVIEN",
+            active: true,
+          });
+
+          existingUser = await userRepository.save(newUser);
+          newUsers.push(existingUser);
+        }
+
+        const isMember = group.members.some(
+          (member) => member.id === existingUser.id
+        );
+        if (!isMember) {
+          group.members.push(existingUser);
+        }
+      }
+
+      await groupRepository.save(group);
+
+      return res.send({
+        message: "Students created successfully",
+        data: newUsers,
+        success: true,
+      });
+    } catch (error) {
+      console.error(error);
+      return res
+        .status(500)
+        .send({ message: "Error creating students", success: false });
+    }
   };
 }
 

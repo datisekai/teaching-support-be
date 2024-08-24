@@ -10,6 +10,7 @@ import courseRoute from "./routes/course";
 import groupRoute from "./routes/group";
 import eventRoomRoute from "./routes/event-room";
 import roomRoute from "./routes/room";
+import statisticRoute from "./routes/statistic";
 import swaggerDocs from "./swagger";
 
 const express = require("express");
@@ -74,6 +75,7 @@ export default config({
     app.use("/api.course", courseRoute);
     app.use("/api.group", groupRoute);
     app.use("/api.room", roomRoute);
+    app.use("/api.statistic", statisticRoute);
 
     swaggerDocs(app);
 

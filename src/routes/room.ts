@@ -2,6 +2,7 @@ import { Router } from "express";
 import { checkJwt } from "../middlewares/checkJwt";
 import RoomController from "../controllers/RoomController";
 import { checkRole } from "../middlewares/checkRole";
+import { UserRole } from "../dto/UserDto";
 
 const router = Router();
 
@@ -10,7 +11,7 @@ router.get("/", [checkJwt], RoomController.listAll);
 
 router.get(
   "/my-rooms",
-  [checkJwt, checkRole(["admin"])],
+  [checkJwt, checkRole([UserRole.ADMIN, UserRole.TEACHER])],
   RoomController.listAllMyRooms
 );
 
@@ -25,5 +26,7 @@ router.put("/:id([0-9]+)", [checkJwt], RoomController.editRoom);
 router.delete("/:id([0-9]+)", [checkJwt], RoomController.deleteRoom);
 
 router.get("/deactivate/:id", [checkJwt], RoomController.deactivate);
+
+router.get("/group/:id", [checkJwt], RoomController.listAllByGroupId);
 
 export default router;

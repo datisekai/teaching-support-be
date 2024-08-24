@@ -14,6 +14,13 @@ router.get("/course/:id", [checkJwt], GroupController.listAllByCourseId);
 // Get one course
 router.get("/:id([0-9]+)", [checkJwt], GroupController.getOneById);
 
+// Get all course
+router.get(
+  "/students/:id([0-9]+)",
+  [checkJwt],
+  GroupController.listAllUserByCourseId
+);
+
 //Create a new course
 router.post(
   "/",
@@ -31,6 +38,11 @@ router.delete(
   "/:id([0-9]+)",
   [checkJwt, checkRole([UserRole.ADMIN])],
   GroupController.deleteGroup
+);
+router.post(
+  "/import/:id([0-9]+)",
+  [checkJwt, checkRole([UserRole.TEACHER])],
+  GroupController.createStudentsByGroupId
 );
 
 export default router;
