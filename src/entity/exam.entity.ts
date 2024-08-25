@@ -7,18 +7,23 @@ import {
   JoinColumn,
   ManyToMany,
   JoinTable,
+  Unique,
 } from "typeorm";
 import { Course } from "./course.entity";
 import { Group } from "./group.entity";
 import { Question } from "./question.entity";
 
 @Entity()
+@Unique(["code"])
 export class Exam {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column("varchar")
   title: string;
+
+  @Column("int")
+  code: number;
 
   @Column({ nullable: true, type: "varchar" })
   description: string;
@@ -36,4 +41,7 @@ export class Exam {
   @ManyToMany(() => Question)
   @JoinTable()
   questions: Question[];
+
+  @Column({ type: "date", nullable: true })
+  start_date: string;
 }

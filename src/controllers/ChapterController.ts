@@ -17,13 +17,13 @@ export class ChapterController {
     const chapterRepository = myDataSource.getRepository(Chapter);
     const chapter = chapterRepository.create(createChapterDto);
     await chapterRepository.save(chapter);
-    return res.status(201).json(chapter);
+    return res.status(201).json({ data: chapter });
   }
 
   async findAll(req: Request, res: Response) {
     const chapterRepository = myDataSource.getRepository(Chapter);
     const chapters = await chapterRepository.find();
-    return res.status(200).json(chapters);
+    return res.status(200).json({ data: chapters });
   }
 
   async findOne(req: Request, res: Response) {
@@ -33,7 +33,7 @@ export class ChapterController {
     if (!chapter) {
       return res.status(404).json({ message: "Chapter not found" });
     }
-    return res.status(200).json(chapter);
+    return res.status(200).json({ data: chapter });
   }
 
   async update(req: Request, res: Response) {
@@ -56,7 +56,7 @@ export class ChapterController {
     const updatedChapter = await chapterRepository.findOne({
       where: { id: +id },
     });
-    return res.status(200).json(updatedChapter);
+    return res.status(200).json({ data: updatedChapter });
   }
 
   async remove(req: Request, res: Response) {
@@ -66,6 +66,6 @@ export class ChapterController {
     if (result.affected === 0) {
       return res.status(404).json({ message: "Chapter not found" });
     }
-    return res.status(204).send();
+    return res.status(204).send({ message: "Chapter deleted successfully" });
   }
 }

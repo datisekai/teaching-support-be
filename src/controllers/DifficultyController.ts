@@ -24,14 +24,14 @@ export class DifficultyLevelController {
       createDifficultyLevelDto
     );
     await difficultyLevelRepository.save(difficultyLevel);
-    return res.status(201).json(difficultyLevel);
+    return res.status(201).json({ data: difficultyLevel });
   }
 
   async findAll(req: Request, res: Response) {
     const difficultyLevelRepository =
       myDataSource.getRepository(DifficultyLevel);
     const difficultyLevels = await difficultyLevelRepository.find();
-    return res.status(200).json(difficultyLevels);
+    return res.status(200).json({ data: difficultyLevels });
   }
 
   async findOne(req: Request, res: Response) {
@@ -43,7 +43,7 @@ export class DifficultyLevelController {
     if (!difficultyLevel) {
       return res.status(404).json({ message: "Difficulty Level not found" });
     }
-    return res.status(200).json(difficultyLevel);
+    return res.status(200).json({ data: difficultyLevel });
   }
 
   async update(req: Request, res: Response) {
@@ -68,7 +68,7 @@ export class DifficultyLevelController {
     const updatedDifficultyLevel = await difficultyLevelRepository.findOne({
       where: { id: +id },
     });
-    return res.status(200).json(updatedDifficultyLevel);
+    return res.status(200).json({ data: updatedDifficultyLevel });
   }
 
   async remove(req: Request, res: Response) {

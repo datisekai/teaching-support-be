@@ -23,7 +23,7 @@ export class User {
   @Column({ type: "varchar", select: false, nullable: true })
   password: string;
 
-  @Column({ type: "varchar", nullable: true })
+  @Column({ type: "varchar", nullable: true, select: false })
   phone: string;
 
   @Column({
@@ -43,6 +43,7 @@ export class User {
   @Column({
     type: "varchar",
     nullable: true,
+    select: false,
   })
   device_uid: string;
 

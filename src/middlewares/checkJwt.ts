@@ -12,7 +12,6 @@ export const checkJwt = async (
 ) => {
   //Get the jwt token from the head
   let token;
-  console.log(req.headers.authorization);
   try {
     token =
       (req.headers.authorization &&

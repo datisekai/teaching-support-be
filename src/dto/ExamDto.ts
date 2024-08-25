@@ -4,7 +4,11 @@ import {
   IsOptional,
   IsInt,
   IsArray,
+  IsNumber,
+  IsIn,
+  ValidateNested,
 } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateExamDto {
   @IsString()
@@ -27,6 +31,10 @@ export class CreateExamDto {
   @IsInt({ each: true })
   @IsNotEmpty()
   questionIds: number[];
+
+  @IsOptional()
+  @IsNumber()
+  code: number;
 }
 
 export class UpdateExamDto {
@@ -50,4 +58,18 @@ export class UpdateExamDto {
   @IsInt({ each: true })
   @IsOptional()
   questionIds?: number[];
+}
+
+class Answer {
+  @IsString()
+  @IsNotEmpty()
+  @IsIn(["option_a", "option_b", "option_c", "option_d"])
+  value: string;
+}
+
+export class AnswersDto {
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => Answer)
+  answers: { [key: number]: Answer };
 }

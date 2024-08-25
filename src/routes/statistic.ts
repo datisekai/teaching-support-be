@@ -10,7 +10,7 @@ const router = Router();
 
 router.get(
   "/:id([0-9]+)",
-  [checkJwt, checkRole([UserRole.TEACHER])],
+  [checkJwt, checkRole([UserRole.TEACHER, UserRole.ADMIN])],
   StatisticController.listStatisticByRoomId
 );
 
