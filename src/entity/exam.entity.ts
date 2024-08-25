@@ -42,6 +42,6 @@ export class Exam {
   @JoinTable()
   questions: Question[];
 
-  @Column({ type: "date", nullable: true })
+  @Column({ type: "datetime", nullable: true })
   start_date: string;
 }

@@ -253,9 +253,11 @@ export const getRandomNumber = (min: number, max: number) => {
   return Math.random() * (max - min) + min;
 };
 
-export function calculateDuration(startDate: string): number {
+export function calculateDuration(startDate: string, endDate?: string): number {
   const startDateTime = new Date(startDate).getTime(); // Convert start_date to timestamp
-  const currentTime = Date.now(); // Get current timestamp
+  const currentTime = endDate
+    ? new Date(endDate).getTime()
+    : new Date().getTime();
 
   const duration = currentTime - startDateTime; // Duration in milliseconds
 

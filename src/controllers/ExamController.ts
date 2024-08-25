@@ -235,6 +235,7 @@ export class ExamController {
     examResult.user_id = res.locals.jwtPayload.id;
     examResult.exam_id = +id;
     examResult.answers = answers.answers;
+    examResult.end_time = new Date() as any;
     await examResultRepository.save(examResult);
 
     const questions = await questionRepository.find({
@@ -309,7 +310,7 @@ export class ExamController {
         examResult: result,
         trueAnswer,
         question: questions.length,
-        takeTime: calculateDuration(result.exam.start_date),
+        takeTime: calculateDuration(result.exam.start_date, result.end_time),
       });
     }
 

@@ -32,6 +32,9 @@ export class ExamResult {
   @JoinColumn({ name: "exam_id" })
   exam: Exam;
 
+  @Column({ type: "datetime", nullable: true })
+  end_time: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: "user_id" })
   user: User;
