@@ -27,7 +27,7 @@ class AuthController {
         select: ["id", "active", "code", "email", "password", "role", "name"],
       });
 
-      if (!user) {
+      if (!user || (user && !user.password)) {
         const info = await AuthService.getInformation(code, password);
 
         if (!info) {
